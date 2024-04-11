@@ -3,7 +3,6 @@ FROM ubuntu
 FROM tomcat
 COPY *.war /usr/local/tomcat/webapps
 WORKDIR  /usr/local/tomcat/webapps
-EXPOSE 8080
 RUN apt update -y && apt install curl -y
 RUN curl -O https://download.newrelic.com/newrelic/java-agent/newrelic-agent/current/newrelic-java.zip && \
     apt-get install unzip -y  && \
