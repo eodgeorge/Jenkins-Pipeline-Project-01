@@ -10,13 +10,6 @@ pipeline {
                 url: 'https://github.com/eodgeorge/Jenkins-Pipeline-Project-01.git'
             }
         }
-        stage('Code Analysis') {
-            steps {
-               withSonarQubeEnv('sonarqube') {
-                  sh "mvn sonar:sonar"  
-               }
-            }   
-        }
         stage("Quality Gate") {
             steps {
               timeout(time: 2, unit: 'MINUTES') {
