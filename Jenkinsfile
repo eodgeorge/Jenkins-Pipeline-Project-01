@@ -11,14 +11,14 @@ pipeline {
         stage('Docker-Build') {
             steps {
                 sh 'docker build -t gooseline .'
-                sh "docker tag gooseline eodgeorge/gooselive:v2"
+                sh "docker tag gooseline eodgeorge/gooselive:v3"
             }
         }
         stage('Push to Docker Hub') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-id', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
-                    sh 'docker push eodgeorge/gooselive:v2'
+                    sh 'docker push eodgeorge/gooselive:v3'
                 }
             }
         }
