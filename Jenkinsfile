@@ -26,7 +26,7 @@ pipeline {
         }
         stage('Build Artifact') {
             steps {
-                sh 'mvn -f pom.xml package -Dmaven.test.skip'
+                sh 'mvn clean package -Dmaven.test.skip'
             }
         }
         stage('Docker-Build') {
@@ -37,7 +37,7 @@ pipeline {
         }
         stage('Push to Docker Hub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials-id', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-id', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
                     sh 'docker push eodgeorge/gooselive:v1'
                 }
@@ -46,7 +46,7 @@ pipeline {
         stage('Trigger Playbooks on Ansible') {
             steps {
                 sshagent (['ssh-key']) {
-                      sh 'ssh ubuntu@18.134.253.197 -o strictHostKeyChecking=no "ansible-playbook webserver.yaml"'
+                      sh 'ssh ubuntu@3.8.171.5 -o strictHostKeyChecking=no "ansible-playbook webserver.yaml"'
                   }
               }
         }
