@@ -3,8 +3,8 @@ pipeline {
         label 'jenkins-line'
     }
     tools {
-        maven 'null'
-        jdk 'null'
+        env.MAVEN_HOME = tool 'Maven'
+        env.JAVA_HOME = tool 'Java'
     }
     stages {
         stage('Code Checkout') {
