@@ -1,5 +1,9 @@
 pipeline {
-    agent any
+    agent {
+        node {
+            label jenkins-line
+        }
+    }
     stages {
         stage('Code Checkout') {
             steps {
@@ -44,8 +48,8 @@ pipeline {
         }
         stage('Trigger Playbooks on Ansible') {
             steps {
-                sshagent (['ansible-privatekey']) {
-                      sh 'ssh ubuntu@***** -o strictHostKeyChecking=no "ansible-playbook docker-image.yml"'
+                sshagent (['ssh-key']) {
+                      sh 'ssh ubuntu@18.134.253.197 -o strictHostKeyChecking=no "ansible-playbook webserver.yaml"'
                   }
               }
         }
