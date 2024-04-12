@@ -3,8 +3,8 @@ pipeline {
         label 'jenkins-line'
     }
     tools {
-        maven 'Maven'
-        jdk 'Java'
+        maven 'null'
+        jdk 'null'
     }
     stages {
         stage('Code Checkout') {
