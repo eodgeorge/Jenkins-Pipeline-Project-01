@@ -1,8 +1,10 @@
 pipeline {
     agent {
-        node {
-            label 'jenkins-line'
-        }
+        label 'jenkins-line'
+    }
+    tools {
+        maven 'Maven'
+        jdk 'Java'
     }
     stages {
         stage('Code Checkout') {
@@ -31,7 +33,6 @@ pipeline {
                 sh 'mvn -f pom.xml package -Dmaven.test.skip'
             }
         }
-
         stage('Docker-Build') {
             steps {
                 sh 'docker build -t gooseline .'
