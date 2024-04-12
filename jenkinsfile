@@ -1,14 +1,14 @@
 pipeline {
     agent {
         node {
-            label jenkins-line
+            label 'jenkins-line'
         }
     }
     stages {
         stage('Code Checkout') {
             steps {
                 git branch: 'main', 
-                credentialsId: 'git-cred', 
+                credentialsId: 'github', 
                 url: 'https://github.com/eodgeorge/Jenkins-Pipeline-Project-01.git'
             }
         }
