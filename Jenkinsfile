@@ -11,21 +11,21 @@ pipeline {
         stage('Docker-Build') {
             steps {
                 sh 'docker build -t gooseline .'
-                sh "docker tag gooseline eodgeorge/gooselive:v1"
+                sh "docker tag gooseline eodgeorge/gooselive:v2"
             }
         }
         stage('Push to Docker Hub') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-id', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
-                    sh 'docker push eodgeorge/gooselive:v1'
+                    sh 'docker push eodgeorge/gooselive:v2'
                 }
             }
         }
         stage('Trigger Playbooks on Ansible') {
             steps {
                 sshagent (['ssh-key']) {
-                      sh 'ssh ubuntu@3.8.171.5 -o strictHostKeyChecking=no "ansible-playbook webserver.yaml"'
+                      sh 'ssh ubuntu@35.178.37.153 -o strictHostKeyChecking=no "ansible-playbook webserver.yaml"'
                   }
               }
         }
