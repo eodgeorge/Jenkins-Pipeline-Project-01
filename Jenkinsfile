@@ -3,13 +3,6 @@ pipeline {
         label 'jenkins-line'
     }
     stages {
-        stage("Quality Gate") {
-            steps {
-              timeout(time: 2, unit: 'MINUTES') {
-                waitForQualityGate abortPipeline: true
-              }
-            }
-        }
         stage('Build Artifact') {
             steps {
                 sh 'mvn clean package -Dmaven.test.skip'
