@@ -2,10 +2,6 @@ pipeline {
     agent {
         label 'jenkins-line'
     }
-    tools {
-        env.MAVEN_HOME = tool 'Maven'
-        env.JAVA_HOME = tool 'Java'
-    }
     stages {
         stage('Code Checkout') {
             steps {
