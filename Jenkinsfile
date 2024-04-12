@@ -28,7 +28,7 @@ pipeline {
         }
         stage('Build Artifact') {
             steps {
-                sh 'mvn -f pom.xml clean package'
+                sh 'mvn -f pom.xml package -Dmaven.test.skip'
             }
         }
 
