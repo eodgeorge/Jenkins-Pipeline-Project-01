@@ -1,4 +1,4 @@
-FROM openjdk:8-jre-slim
+FROM openjdk
 FROM ubuntu
 FROM tomcat
 COPY */*.war /usr/local/tomcat/webapps
@@ -13,4 +13,4 @@ ENV NEW_RELIC_APP_NAME="myapp"
 ENV NEW_RELIC_LOG_FILE_NAME=STDOUT
 ENV NEW_RELIC_LICENCE_KEY="eu01xx31c21b57a02a5da0d33d8706beb182NRAL"
 ADD ./newrelic.yml /usr/local/tomcat/webapps/newrelic/newrelic.yml
-CMD "java", "-jar", "-javaagent:/usr/local/tomcat/webapps/newrelic/newrelic.jar", "spring-petclinic-2.4.2.war
+CMD java -jar -javaagent:/usr/local/tomcat/webapps/newrelic/newrelic.jar spring-petclinic-2.4.2.war

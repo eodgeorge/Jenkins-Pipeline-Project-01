@@ -26,6 +26,8 @@ pipeline {
             steps {
                 sh 'docker build -t gooseline .'
                 sh "docker tag gooseline eodgeorge/gooselive:v4"
+                sh 'docker stop myapp'
+                sh 'docker rm myapp'
             }
         }
         stage('Push to Docker Hub') {
