@@ -6,13 +6,15 @@ pipeline {
         stage('Code Analysis') {
             steps {
                 withSonarQubeEnv('sonar') {
-                sh "mvn sonar:sonar -Dsonar.java.binaries=target/classes"
+                    sh "mvn sonar:sonar -Dsonar.java.binaries=target/classes"
+                }
             }
-        }   
+        }
         stage("Quality Gate") {
             steps {
-              timeout(time: 2, unit: 'MINUTES') {
-                waitForQualityGate abortPipeline: true
+                timeout(time: 2, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
             }
         }
         stage('Build Artifact') {
@@ -33,12 +35,14 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-id', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
                     sh 'docker push eodgeorge/gooselive:v4'
+                }
             }
         }
         stage('Trigger Playbooks on Ansible') {
             steps {
                 sshagent (['ssh-key']) {
-                      sh 'ssh ubuntu@18.171.211.88 -o strictHostKeyChecking=no "ansible-playbook webserver.yaml"'
+                    sh 'ssh ubuntu@18.171.211.88 -o strictHostKeyChecking=no "ansible-playbook webserver.yaml"'
+                }
             }
         }
     }                   
