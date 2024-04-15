@@ -6,7 +6,7 @@ pipeline {
         stage('Code Analysis') {
             steps {
                 withSonarQubeEnv('sonar') {
-                    sh "mvn sonar:sonar -Dsonar.java.binaries=target/classes"
+                    sh "mvn sonar:sonar -Dsonar.java.binaries=target/classes,target/test-classes"
                 }
             }
         }
