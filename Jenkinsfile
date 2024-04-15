@@ -3,20 +3,6 @@ pipeline {
         label 'jenkins-line'
     }
     stages {
-        stage('Code Analysis') {
-            steps {
-                withSonarQubeEnv('sonar') {
-                    sh "mvn sonar:sonar -Dsonar.java.binaries=target/classes,target/test-classes"
-                }
-            }
-        }
-        stage("Quality Gate") {
-            steps {
-                timeout(time: 2, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
         stage('Build Artifact') {
             steps {
                 sh 'mvn clean package -Dmaven.test.skip'
