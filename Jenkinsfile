@@ -25,7 +25,7 @@ pipeline {
         stage('Trigger Playbooks on Ansible') {
             steps {
                 sshagent (['ssh-key']) {
-                    sh 'ssh ubuntu@18.171.211.88 -o strictHostKeyChecking=no "ansible-playbook webserver.yaml"'
+                    sh 'ssh ubuntu@18.170.27.175 -o strictHostKeyChecking=no "ansible-playbook webserver.yaml"'
                 }
             }
         }
