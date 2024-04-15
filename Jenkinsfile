@@ -25,7 +25,7 @@ pipeline {
         stage('Docker-Build') {
             steps {
                 sh 'docker build -t gooseline .'
-                sh "docker tag gooseline eodgeorge/gooselive:v4"
+                sh "docker tag gooseline eodgeorge/gooselive:v5"
                 sh 'docker stop myapp'
                 sh 'docker rm myapp'
             }
@@ -41,7 +41,7 @@ pipeline {
         stage('Trigger Playbooks on Ansible') {
             steps {
                 sshagent (['ssh-key']) {
-                      sh 'ssh ubuntu@35.178.37.153 -o strictHostKeyChecking=no "ansible-playbook webserver.yaml"'
+                      sh 'ssh ubuntu@18.171.211.88 -o strictHostKeyChecking=no "ansible-playbook webserver.yaml"'
                   }
               }
         }
