@@ -7,14 +7,12 @@ pipeline {
             steps {
                 withSonarQubeEnv('sonar') {
                 sh "mvn sonar:sonar -Dsonar.java.binaries=target/classes"
-                }
-            }   
-        }
+            }
+        }   
         stage("Quality Gate") {
             steps {
               timeout(time: 2, unit: 'MINUTES') {
                 waitForQualityGate abortPipeline: true
-              }
             }
         }
         stage('Build Artifact') {
