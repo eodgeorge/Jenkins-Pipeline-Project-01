@@ -41,7 +41,7 @@ pipeline {
         stage('Trigger Playbooks on Ansible') {
             steps {
                 sshagent (['ssh-key']) {
-                      sh 'ssh ubuntu@35.178.37.153 -o strictHostKeyChecking=no "ansible-playbook webserver.yaml"'
+                      sh 'ssh ubuntu@35.178.37.153 -o strictHostKeyChecking=no "sudo /etc/ansible/discovery.sh"' 
                   }
               }
         }
