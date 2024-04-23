@@ -1,3 +1,14 @@
+FROM ubuntu AS builder 
+RUN apt update
+WORKDIR /usr/local/tomcat/webapps
+COPY ./target/spring-petclinic-2.4.3.war /usr/local/tomcat/webapps
+
+
+
+
+
+
+
 FROM openjdk
 FROM ubuntu
 FROM tomcat

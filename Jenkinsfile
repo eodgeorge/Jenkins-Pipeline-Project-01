@@ -80,7 +80,7 @@ pipeline {
         }
         stage('Build Artifact') {
             steps {
-                sh 'mvn clean package -Dmaven.test.skip'
+                sh 'mvn package -Dmaven.test.skip'
             }
         }
         stage('Docker-Build') {
