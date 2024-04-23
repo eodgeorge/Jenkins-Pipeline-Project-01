@@ -1,18 +1,26 @@
-FROM ubuntu AS builder 
-RUN apt update
-WORKDIR /usr/local/tomcat/webapps
-COPY ./target/spring-petclinic-2.4.3.war /usr/local/tomcat/webapps
+
+FROM tomcat:latest
+WORKDIR  /usr/local/tomcat/webapps
+RUN apt-get update -y && apt-get install curl -y
+RUN curl -O https://download.newrelic.com/newrelic/java-agent/newrelic-agent/current/newrelic-java.zip && \
+    unzip -o newrelic-java.zip -d /usr/local/tomcat/webapps && \
+    rm newrelic-java.zip
+ENV JAVA_OPTS="$JAVA_OPTS -javaagent:/usr/local/tomcat/webapps/newrelic/newrelic.jar"
+ENV NEW_RELIC_APP_NAME="myapp"
+ENV NEW_RELIC_LOG_FILE_NAME=STDOUT
+ENV NEW_RELIC_LICENSE_KEY="eu01xx31c21b57a02a5da0d33d8706beb182NRAL"
+ADD ./newrelic.yml /usr/local/tomcat/webapps/newrelic/newrelic.yml
+COPY ./target/*.war /usr/local/tomcat/webapps/
+EXPOSE 8080
+ENTRYPOINT ["catalina.sh", "run"]
 
 
 
-
-
-
-
-FROM openjdk
+FROM openjdk:alpine
 FROM ubuntu
 FROM tomcat
-COPY */*.war /usr/local/tomcat/webapps
+RUN apt update
+COPY ./target/*.war /usr/local/tomcat/webapps
 EXPOSE 8080
 WORKDIR  /usr/local/tomcat/webapps
 RUN apt update -y && apt install curl -y
@@ -24,4 +32,4 @@ ENV NEW_RELIC_APP_NAME="myapp"
 ENV NEW_RELIC_LOG_FILE_NAME=STDOUT
 ENV NEW_RELIC_LICENCE_KEY="eu01xx31c21b57a02a5da0d33d8706beb182NRAL"
 ADD ./newrelic.yml /usr/local/tomcat/webapps/newrelic/newrelic.yml
-CMD java -jar -javaagent:/usr/local/tomcat/webapps/newrelic/newrelic.jar spring-petclinic-2.4.2.war
+CMD java -jar $JAVA_OPTS -jar spring-petclinic-2.4.2.war
