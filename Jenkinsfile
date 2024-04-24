@@ -3,15 +3,15 @@ pipeline {
 
     stages {
 
-        stage('github') {
+        stage('checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/eodgeorge/Jenkins-Pipeline-Project-01.git'
+                git branch: 'main', url: 'https://eodgeorge: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@github.com/eodgeorge/Jenkins-Pipeline-Project-01.git'
             }
         }
         stage('Code Analysis') {
             steps {
                 withSonarQubeEnv('sonar') {
-                    sh "mvn sonar:sonar -Dsonar.java.binaries=target/classes"
+                    sh 'mvn sonar:sonar -Dsonar.java.binaries=target/classes -Dsonar.tests=target/test-classes'
                 }
             }
         }
@@ -24,76 +24,20 @@ pipeline {
         }
         stage('Build Artifact') {
             steps {
-                sh 'mvn clean package -Dmaven.test.skip'
+                sh 'sudo mvn package -Dmaven.test.skip'
             }
         }
         stage('Docker-Build') {
             steps {
                 sh 'docker build -t gooseline .'
-                sh "docker tag gooseline eodgeorge/gooselive:v1"
+                sh 'docker tag gooseline eodgeorge/gooselive:v15'
             }
         }
         stage('Trivy Security Scan') {
             steps {
                 script {
-                    def dockerImageTag = 'eodgeorge/gooselive:v1'
-                    def scanOutput = sh(script: "trivy image --severity HIGH,CRITICAL '${dockerImageTag}'", returnStdout: true).trim()
-                    echo scanOutput
-                    if (scanOutput.contains('CRITICAL') || scanOutput.contains('HIGH')) {
-                    error "Vulnerabilities found, failing build"
-                    }
-                }
-            }
-        }
-        stage('Push to Docker Hub') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-id', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                    sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
-                    sh 'docker push eodgeorge/gooselive:v1'
-                }
-            }
-        }
-        stage('Trigger Playbooks on Ansible') {
-            steps {
-                sshagent (['ssh-key']) {
-                      sh 'ssh ubuntu@18.171.175.132 -o strictHostKeyChecking=no "sudo /etc/ansible/discovery.sh"' 
-                }
-             }
-         }
-     }                   
-}
-
-
-
-
-tttttttttttttttt
-
-pipeline {
-    agent any
-
-    stages {
-
-        stage('checkout') {
-            steps {
-                git branch: 'main', url: 'https://eodgeorge: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@github.com/eodgeorge/Jenkins-Pipeline-Project-01.git'
-            }
-        }
-        stage('Build Artifact') {
-            steps {
-                sh 'mvn package -Dmaven.test.skip'
-            }
-        }
-        stage('Docker-Build') {
-            steps {
-                sh 'docker build -t gooseline .'
-                sh "docker tag gooseline eodgeorge/gooselive:v1"
-            }
-        }
-        stage('Trivy Security Scan') {
-            steps {
-                script {
-                    def dockerImageTag = 'eodgeorge/gooselive:v1'
-                    def scanOutput = sh(script: "trivy image --severity HIGH,CRITICAL '${dockerImageTag}'", returnStdout: true).trim()
+                    def dockerImageTag = 'eodgeorge/gooselive:v15'
+                    def scanOutput = sh(script: "sudo trivy image --severity HIGH,CRITICAL '${dockerImageTag}'", returnStdout: true).trim()
                     echo scanOutput
                     if (scanOutput.contains('CRITICAL') || scanOutput.contains('HIGH')) {
                     error "Vulnerabilities found, failing build"
@@ -105,7 +49,7 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-id', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
-                    sh 'docker push eodgeorge/gooselive:v1'
+                    sh 'docker push eodgeorge/gooselive:v15'
                 }
             }
         }
@@ -118,3 +62,71 @@ pipeline {
         }
     }
 }
+
+
+
+// -------------------------------------------
+// pipeline {
+//     agent any
+
+//     stages {
+
+//         stage('github') {
+//             steps {
+//                 git branch: 'main', url: 'https://github.com/eodgeorge/Jenkins-Pipeline-Project-01.git'
+//             }
+//         }
+//         stage('Code Analysis') {
+//             steps {
+//                 withSonarQubeEnv('sonar') {
+//                     sh "mvn sonar:sonar -Dsonar.java.binaries=target/classes"
+//                 }
+//             }
+//         }
+//         stage("Quality Gate") {
+//             steps {
+//                 timeout(time: 2, unit: 'MINUTES') {
+//                     waitForQualityGate abortPipeline: true
+//                 }
+//             }
+//         }
+//         stage('Build Artifact') {
+//             steps {
+//                 sh 'mvn clean package -Dmaven.test.skip'
+//             }
+//         }
+//         stage('Docker-Build') {
+//             steps {
+//                 sh 'docker build -t gooseline .'
+//                 sh "docker tag gooseline eodgeorge/gooselive:v1"
+//             }
+//         }
+//         stage('Trivy Security Scan') {
+//             steps {
+//                 script {
+//                     def dockerImageTag = 'eodgeorge/gooselive:v1'
+//                     def scanOutput = sh(script: "trivy image --severity HIGH,CRITICAL '${dockerImageTag}'", returnStdout: true).trim()
+//                     echo scanOutput
+//                     if (scanOutput.contains('CRITICAL') || scanOutput.contains('HIGH')) {
+//                     error "Vulnerabilities found, failing build"
+//                     }
+//                 }
+//             }
+//         }
+//         stage('Push to Docker Hub') {
+//             steps {
+//                 withCredentials([usernamePassword(credentialsId: 'dockerhub-id', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+//                     sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
+//                     sh 'docker push eodgeorge/gooselive:v1'
+//                 }
+//             }
+//         }
+//         stage('Trigger Playbooks on Ansible') {
+//             steps {
+//                 sshagent (['ssh-key']) {
+//                       sh 'ssh ubuntu@18.171.175.132 -o strictHostKeyChecking=no "sudo /etc/ansible/discovery.sh"' 
+//                 }
+//              }
+//          }
+//      }                   
+// }
