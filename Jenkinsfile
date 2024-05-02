@@ -30,13 +30,13 @@ pipeline {
         stage('Docker-Build') {
             steps {
                 sh 'docker build -t gooseline .'
-                sh 'docker tag gooseline eodgeorge/gooselive:v15'
+                sh 'docker tag gooseline eodgeorge/gooselive:v5'
             }
         }
         stage('Trivy Security Scan') {
             steps {
                 script {
-                    def dockerImageTag = 'eodgeorge/gooselive:v15'
+                    def dockerImageTag = 'eodgeorge/gooselive:v5'
                     def scanOutput = sh(script: "sudo trivy image --severity HIGH,CRITICAL '${dockerImageTag}'", returnStdout: true).trim()
                     echo scanOutput
                     if (scanOutput.contains('CRITICAL') || scanOutput.contains('HIGH')) {
@@ -49,7 +49,7 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-id', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
-                    sh 'docker push eodgeorge/gooselive:v15'
+                    sh 'docker push eodgeorge/gooselive:v5'
                 }
             }
         }
@@ -98,13 +98,13 @@ pipeline {
 //         stage('Docker-Build') {
 //             steps {
 //                 sh 'docker build -t gooseline .'
-//                 sh "docker tag gooseline eodgeorge/gooselive:v1"
+//                 sh "docker tag gooseline eodgeorge/gooselive:v5"
 //             }
 //         }
 //         stage('Trivy Security Scan') {
 //             steps {
 //                 script {
-//                     def dockerImageTag = 'eodgeorge/gooselive:v1'
+//                     def dockerImageTag = 'eodgeorge/gooselive:v5'
 //                     def scanOutput = sh(script: "trivy image --severity HIGH,CRITICAL '${dockerImageTag}'", returnStdout: true).trim()
 //                     echo scanOutput
 //                     if (scanOutput.contains('CRITICAL') || scanOutput.contains('HIGH')) {
@@ -117,7 +117,7 @@ pipeline {
 //             steps {
 //                 withCredentials([usernamePassword(credentialsId: 'dockerhub-id', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
 //                     sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
-//                     sh 'docker push eodgeorge/gooselive:v1'
+//                     sh 'docker push eodgeorge/gooselive:v5'
 //                 }
 //             }
 //         }
