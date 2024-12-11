@@ -1,7 +1,6 @@
-FROM maven:3.6.3-openjdk-17 
+FROM openjdk-17 
 MAINTAINER label=davcho
 WORKDIR $HOME/app
-COPY . .
-RUN mvn clean package -Dmaven.test.skip=true
+COPY target .
 EXPOSE 8080
 CMD ["java", "-jar", "target/spring-petclinic-2.4.3.war"]
