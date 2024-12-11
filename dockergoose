@@ -1,4 +1,4 @@
-FROM openjdk-17 
+FROM openjdk
 MAINTAINER label=davcho
 WORKDIR $HOME/app
 COPY target .
