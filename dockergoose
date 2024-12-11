@@ -1,6 +1,6 @@
 FROM openjdk
 MAINTAINER label=davcho
 WORKDIR $HOME/app
-COPY ./target/* .
+COPY ./target/*.war $HOME/app
 EXPOSE 8080
-CMD ["java", "-jar", "target/spring-petclinic-2.4.3.war"]
+CMD ["java", "-jar", "./spring-petclinic-2.4.3.war"]
